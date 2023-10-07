@@ -1,0 +1,30 @@
+// first try; time limit exceeded;
+
+class Solution:
+    def maxSlidingWindow(self, nums: List[int], k: int) -> List[int]:
+        res=[]
+        for i in range(len(nums)-k+1):
+            max_num = max(nums[i:i+k])
+            res.append(max_num)
+        return res
+
+// 
+class Solution:
+    def maxSlidingWindow(self, nums: List[int], k: int) -> List[int]:
+        para = []   //para is the sliding window 
+        res = []
+        
+        for i in range(len(nums)):            
+            if para and para[0] == i - k: para.pop(0)    //when the first element in para is equal to i -k, we pop the first element to slide the window
+                
+    
+            while para and nums[para[-1]] <= nums[i]: para.pop() // when any element is smaller than the ith element, we pop those elements. add the ith element 
+            
+            para.append(i)
+            if i >= k - 1: res.append(nums[para[0]])
+        
+        return res
+
+
+
+        
