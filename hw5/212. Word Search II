@@ -1,0 +1,47 @@
+
+class Solution:
+    def findWords(self, board: List[List[str]], words: List[str]) -> List[str]:
+        found_words = []
+        
+        # Define a Trie using defaultdict
+        Trie = lambda: defaultdict(Trie)
+        root = Trie()
+        
+        # Function to add words to the Trie
+        def add_word(word):
+            current_node = root
+            for char in word:
+                current_node = current_node[char]
+            current_node['$'] = word
+        
+        # Add words from the list to the Trie
+        for word in words:
+            add_word(word)
+        
+        num_rows, num_cols = len(board), len(board[0])
+        
+        # Depth-first search function
+        def explore(i, j, node):
+            char = board[i][j]
+            current_node = node.get(char)
+            if not current_node:
+                return
+
+            if '$' in current_node:
+                found_words.append(current_node['$'])
+                del current_node['$']
+
+            board[i][j] = '#'
+            directions = [(1, 0), (-1, 0), (0, 1), (0, -1)]
+            for dx, dy in directions:
+                new_i, new_j = i + dx, j + dy
+                if 0 <= new_i < num_rows and 0 <= new_j < num_cols and board[new_i][new_j] != '#':
+                    explore(new_i, new_j, current_node)
+            
+            board[i][j] = char
+
+        for i in range(num_rows):
+            for j in range(num_cols):
+                explore(i, j, root)
+
+        return found_words
